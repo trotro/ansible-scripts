@@ -1,0 +1,11 @@
+[rancherOS]
+178.170.72.46
+
+[rancherOS:vars]
+ansible_user=rancher
+
+[coreOS]
+154.46.204.5
+
+[coreOS:vars]
+ansible_user=core
