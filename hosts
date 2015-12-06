@@ -1,11 +1,17 @@
-[rancherOS]
+localhost              ansible_connection=local
+
+[rancher]
 178.170.72.46
 
-[rancherOS:vars]
-ansible_user=rancher
+[rancher:vars]
+ansible_ssh_user=rancher
+ansible_ssh_private_key_file=/home/ntrauwaen/.ssh/thatKey
 
 [coreOS]
 154.46.204.5
 
 [coreOS:vars]
-ansible_user=core
+ansible_ssh_user=core
+ansible_ssh_private_key_file=/home/ntrauwaen/.ssh/thatKey
+
+[demo]
