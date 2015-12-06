@@ -1,0 +1,40 @@
+- hosts: 127.0.0.1
+  connection: local
+  gather_facts: no
+  tasks:
+# Ensure security group demo exists
+  - name: ensure security_group demo exists
+    local_action:
+      module: cs_securitygroup
+      name: demo
+
+# Add inbound tcp rules to security group default
+  - name: add inbound TCP rule
+    local_action:
+      module: cs_securitygroup_rule
+      security_group: demo
+      start_port: '{{ item }}'
+      end_port: '{{ item }}'
+    with_items:
+    - 22
+    - 80
+
+# Create a virtual machine on CloudStack
+  - name: create virtual machine
+    local_action:
+      module: cs_instance
+      name: vm-3
+      template: Debian 8 - Minimal - 64bits
+      zone: EU-DE-Z2-BASIC
+      security_groups: demo
+      service_offering: t1.pico
+      ssh_key: thatKey
+    register: vm
+  - name: print VM infos
+    debug: msg="VM {{ inventory_hostname }} {{ vm.default_ip }}"
+
+# Register VM to the inventory
+  - name: assing IP to the inventory
+    set_fact: ansible_ssh_host={{ vm.default_ip }}
+  - name: waiting for SSH to come up
+    wait_for: port=22 host={{ vm.default_ip }} delay=5
