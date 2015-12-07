@@ -22,7 +22,7 @@
   - name: create virtual machine
     local_action:
       module: cs_instance
-      name: vm-demo-js
+      name: vm1
       template: Debian 8 - Minimal - 64bits
       zone: EU-DE-Z2-BASIC
       security_groups: demo
