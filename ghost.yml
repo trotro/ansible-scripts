@@ -1,23 +1,83 @@
-# install nodeJS
-- name: install nodeJS engine
+---
+- hosts: demo
   remote_user: root
-  hosts: vm-3
-  pre_tasks:
+  vars:
+    ghost_install_dir: /var/www/ghost
+    ghost_user_name: ghost
+    ghost_user_group: ghost
+    ghost_fetch_url: https://ghost.org/zip/ghost-latest.zip
+    ghost_fetch_dir: /root
+    ghost_config_url: http://{{ ghost_config_server.host }}:{{ ghost_config_server.port }}
+    ghost_config_mail: {}
+    ghost_config_database:
+      client: "sqlite3"
+      connection:
+        filename: "{{ ghost_install_dir }}/content/data/ghost.db"
+      debug: "false"
+    ghost_config_server:
+      host: "127.0.0.1"
+      port: "2368"
+  tasks:
+# install nodeJS
   - name: update system (may take a while)
     apt: update_cache=yes
 
-  - name: install packages
-    apt: pkg=nodejs
+  - name: install nodeJS
+    apt: pkg={{ item }}
+    with_items:
+      - nodejs
+      - npm
 
-#  - name: ensure services are running
-#    service: name={{ item }} state=started enabled=yes
-#    with_items:
-#    - node
+  - name: prepare - fetch Ghost
+    get_url:
+      url: "{{ ghost_fetch_url }}"
+      dest: "{{ ghost_fetch_dir }}/ghost.zip"
+      mode: 0640
 
-#  - name: wait for ghost to be up
-#    wait_for: port=80 delay=10
+  - name: prepare - check if Ghost installation path exists
+    stat:
+      path: "{{ ghost_install_dir | dirname }}"
+    register: ghost_check_install_dir
 
-  post_tasks:
-  - name: finished
-    debug: msg="setup of node done on {{ vm.default_ip }}"
-#    debug: msg='Open your browser http://{{ vm.default_ip }}'
+  - name: prepare - create Ghost installation path if necessary
+    file:
+      dest: "{{ ghost_install_dir | dirname }}"
+      owner: root
+      group: root
+      mode: 0750
+      state: directory
+    when: not ghost_check_install_dir.stat.exists
+
+  - name: prepare - add Ghost group
+    group:
+      name: "{{ ghost_user_group }}"
+      system: yes
+      state: present
+
+  - name: prepare - add Ghost user
+    user:
+      name: "{{ ghost_user_name }}"
+      group: "{{ ghost_user_group }}"
+      home: "{{ ghost_install_dir }}"
+      createhome: yes
+      shell: /bin/false
+      system: yes
+      state: present
+
+  - name: prepare - unzip Ghost
+    unarchive:
+      src: "{{ ghost_fetch_dir }}/ghost.zip"
+      dest: "{{ ghost_install_dir }}"
+      owner: "{{ ghost_user_name }}"
+      group: "{{ ghost_user_group }}"
+      copy: no
+      creates: "{{ ghost_install_dir }}/index.js"
+  #  sudo_user: "{{ ghost_user_name }}"
+  #  sudo: yes
+  - name: install ghost
+    command: cd /var/www/ghost
+    command: npm install --production
+
+  - name: post_tasks
+    debug: msg="setup of ghost done on {{ vm.default_ip }}"
+    debug: msg='Open your browser http://{{ vm.default_ip }}:{{ ghost_config_server.port }}'

@@ -17,13 +17,12 @@
       end_port: '{{ item }}'
     with_items:
     - 22
-    - 80
 
 # Create a virtual machine on CloudStack
   - name: create virtual machine
     local_action:
       module: cs_instance
-      name: vm-3
+      name: vm-demo-js
       template: Debian 8 - Minimal - 64bits
       zone: EU-DE-Z2-BASIC
       security_groups: demo

@@ -1,0 +1,26 @@
+---
+- hosts: demo
+  remote_user: root
+  tasks:
+  - name: install latest nodeJS repo
+    shell: curl -sL https://deb.nodesource.com/setup_5.x | bash -
+
+  - name: update system (may take a while)
+    apt: update_cache=yes
+
+  - name: install nodeJS
+    apt: pkg={{ item }}
+    with_items:
+      - nodejs
+
+  - name: install csclient
+    command: npm install csclient
+
+  - name: copy script
+    copy:
+      src: ../appJS/listVM.js
+      dest: /root
+      mode: 0640
+
+  - name: fin
+    debug: msg="setup done"
