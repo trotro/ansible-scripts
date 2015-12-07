@@ -1,0 +1,5 @@
+---
+- hosts: js
+  roles:
+    - nodeJS-debian8
+    - cs-js-scripts

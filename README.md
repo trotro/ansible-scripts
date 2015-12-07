@@ -5,10 +5,11 @@ I intend to write playbooks the most portable as possible. So there is few depen
 
 # cloud
 require ansible-cloudstack extra module from https://github.com/resmo/ansible-cloudstack
-- deploy-VM-cloudstack.yml : made to deploy an instance inside ikoula's public cloud
+- cs-deploy.yml : deploy an instance inside ikoula's public cloud
 
 # Roles
-- js.yml : deploy a JS script with nodeJS installation on debian 8
+- cs-js-scripts.yml : deploy JS scripts based on csclient https://www.npmjs.com/package/csclient
+- nodeJS-debian8 : install latest nodeJS engine on
 - ghost.yml : deploy ghostJS bloging app
 
 # Samples

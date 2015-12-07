@@ -9,15 +9,3 @@
   apt: pkg={{ item }}
   with_items:
     - nodejs
-
-- name: install csclient
-  command: npm install csclient
-
-- name: copy script
-  copy:
-    src: ../appJS/listVM.js
-    dest: /root
-    mode: 0640
-
-- name: fin
-  debug: msg="setup done"
