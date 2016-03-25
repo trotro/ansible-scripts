@@ -16,16 +16,7 @@ vars:
     host: "127.0.0.1"
     port: "2368"
 tasks:
-# install nodeJS
-- name: update system (may take a while)
-  apt: update_cache=yes
-
-- name: install nodeJS
-  apt: pkg={{ item }}
-  with_items:
-    - nodejs
-    - npm
-
+# install nodeJS by nodeJS role
 - name: prepare - fetch Ghost
   get_url:
     url: "{{ ghost_fetch_url }}"
@@ -73,8 +64,7 @@ tasks:
 #  sudo_user: "{{ ghost_user_name }}"
 #  sudo: yes
 - name: install ghost
-  command: cd /var/www/ghost
-  command: npm install --production
+  command: cd /var/www/ghost && npm install --production
 
 - name: post_tasks
   debug: msg="setup of ghost done on {{ vm.default_ip }}"
