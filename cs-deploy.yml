@@ -1,18 +1,18 @@
-- hosts: 127.0.0.1
+- hosts: localhost
   connection: local
   gather_facts: no
   tasks:
-# Ensure security group demo exists
-  - name: ensure security_group demo exists
+# Ensure security group mycloud exists
+  - name: ensure security_group mycloud exists
     local_action:
       module: cs_securitygroup
-      name: demo
+      name: mycloud
 
 # Add inbound tcp rules to security group default
   - name: add inbound TCP rule
     local_action:
       module: cs_securitygroup_rule
-      security_group: demo
+      security_group: mycloud
       start_port: '{{ item }}'
       end_port: '{{ item }}'
     with_items:
@@ -22,10 +22,10 @@
   - name: create virtual machine
     local_action:
       module: cs_instance
-      name: vm1
+      name: mycloudOS
       template: Debian 8 - Minimal - 64bits
-      zone: EU-DE-Z2-BASIC
-      security_groups: demo
+      zone: EU-FR-Z1-ADV
+      security_groups: mycloud
       service_offering: t1.pico
       ssh_key: thatKey
     register: vm
