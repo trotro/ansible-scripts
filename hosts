@@ -1,1 +1,7 @@
-localhost              ansible_connection=local
+localhost
+
+[ikcloud:children]
+wordpress
+
+[wordpress]
+wp-vm1
