@@ -1,38 +1,43 @@
-- hosts: 127.0.0.1
+---
+- name: deploy inside cloudstack
+  hosts: localhost
   connection: local
-  gather_facts: no
+  #gather_facts: no
   tasks:
-# Ensure security group rancher exists
-  - name: ensure security_group default exists
-    local_action:
-      module: cs_securitygroup
-      name: default
-
-# Add inbound tcp rules to security group default
-  - name: add inbound TCP rule
-    local_action:
-      module: cs_securitygroup_rule
-      security_group: default
-      start_port: '{{ item }}'
-      end_port: '{{ item }}'
+  - name: ensure security group exists
+    cs_securitygroup:
+      name: "{{ item }}"
     with_items:
-    - 22
+      - default
 
-# Create a virtual machine on CloudStack
+  - name: add inbound TCP rule
+    cs_securitygroup_rule:
+      security_group: default
+      start_port: "{{ item }}"
+      end_port: "{{ item }}"
+    with_items:
+      - 22
+
   - name: create virtual machine
-    local_action:
-      module: cs_instance
+  hosts: ikcloud
+  connection: local
+  tasks:
+  - name: create and run VM(s)
+    cs_instance:
+      name: "{{ inventory_hostname_short }}"
       template: Debian 8 - Minimal - 64bits
-      zone: EU-NL-Z1-ADV
+      zone: EU-NL-Z1-BASIC
       security_groups: default
       service_offering: t1.pico
       ssh_key: thatKey
+      state: started
     register: vm
-  - name: print VM infos
-    debug: msg="VM {{ inventory_hostname }} {{ vm.default_ip }}"
 
-# Register VM to the inventory
-#  - name: assing IP to the inventory
-#    set_fact: ansible_ssh_host={{ vm.default_ip }}
-#  - name: waiting for SSH to come up
-#    wait_for: port=22 host={{ vm.default_ip }} delay=5
+  - name: print VM infos
+    debug: msg= "VM {{ vm.name }} {{ vm.default_ip }}"
+
+  - name: assing IP to the inventory
+    set_fact: ansible_ssh_host={{ vm.default_ip }}
+
+  - name: waiting for SSH to come up
+    wait_for: port=22 host={{ vm.default_ip }} delay=5
