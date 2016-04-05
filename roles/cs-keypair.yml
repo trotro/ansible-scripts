@@ -1,0 +1,7 @@
+- name: ensure my ssh public key exists in all CloudStack regions
+  local_action: cs_sshkeypair
+    name: my-ssh-key
+    public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    api_region: "{{ item }}"
+    with_items:
+      - 67669csikx
