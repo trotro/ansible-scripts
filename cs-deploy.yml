@@ -18,26 +18,25 @@
     with_items:
       - 22
 
-  - name: create virtual machine
-  hosts: ikcloud
+- name: create virtual machine
+  hosts: wordpress
   connection: local
   tasks:
   - name: create and run VM(s)
     cs_instance:
       name: "{{ inventory_hostname_short }}"
-      template: Debian 8 - Minimal - 64bits
-      zone: EU-NL-Z1-BASIC
-      security_groups: default
-      service_offering: t1.pico
+      template: "{{ cs_template }}"
+      zone: "{{ cs_zone }}"
+      service_offering: "{{ cs_offering }}"
+      security_groups: "{{ cs_securitygroups }}"
       ssh_key: thatKey
       state: started
     register: vm
 
   - name: print VM infos
-    debug: msg= "VM {{ vm.name }} {{ vm.default_ip }}"
+    debug: msg="VM {{ vm.name }} {{ vm.default_ip }}"
 
   - name: assing IP to the inventory
     set_fact: ansible_ssh_host={{ vm.default_ip }}
-
   - name: waiting for SSH to come up
     wait_for: port=22 host={{ vm.default_ip }} delay=5
