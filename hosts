@@ -5,3 +5,9 @@ wordpress
 
 [wordpress]
 wp-vm1
+
+[wordpress:vars]
+cs_template=Debian 8 - Minimal - 64bits
+cs_offering=t1.pico
+cs_zone=EU-NL-Z2-BASIC
+cs_securitygroups=default
