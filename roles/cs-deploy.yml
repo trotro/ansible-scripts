@@ -17,6 +17,7 @@
       end_port: "{{ item }}"
     with_items:
       - 22
+      - 80
 
 - name: create virtual machine
   hosts: wordpress
