@@ -1,0 +1,49 @@
+---
+- name: install jgeusebroek.docker from ansible galaxy
+  hosts: localhost
+  command: ansible-galaxy install jgeusebroek.docker
+
+- name: install docker-engine
+  hosts: wordpress
+  roles:
+  - { role: jgeusebroek.docker, tags: ["docker"] }
+
+- name: create source folder for db and wp
+  command: mkdir /home/wp && mkdir /home/wp/db && mkdir /home/wp/data
+  template: src=nginx.conf dest=/home/wp/conf/nginx.conf
+
+# deploy containers
+- name: mariadb container
+  docker:
+    name: mariadb
+    image: mariadb:5
+    state: started
+    volumes:
+      - /home/wp/db:/var/lib/mysql
+    env:
+      MYSQL_ROOT_PASSWORD: djMucnRen5G5
+
+- name: wordpress container
+  docker:
+    name: wordpress
+    image: wordpress/fpm
+    state: reloaded
+    pull: always
+    volumes:
+    - /home/wp/data:/var/www/html
+    links:
+    - "mariadb:mysql"
+
+- name: nginx container
+  docker:
+    name: nginx
+    image: nginx
+    state: reloaded
+    volumes:
+    - /home/wp/conf/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    volumes_from:
+    - wordpress
+    links:
+    - "wordpress:wordpress"
+    ports:
+    - "80:80"
