@@ -14,4 +14,5 @@ RUN pip install cs
 
 # ==> Executing Ansible (with a simple wrapper)...
 #RUN ansible-playbook-wrapper
+COPY hosts /etc/ansible/hosts
 CMD ["sh"]
