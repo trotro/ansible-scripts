@@ -14,5 +14,8 @@ RUN pip install cs
 
 # ==> Executing Ansible (with a simple wrapper)...
 #RUN ansible-playbook-wrapper
-COPY hosts /etc/ansible/hosts
+# Install roles from galaxy
+RUN ansible-galaxy install abaez.docker
+RUN curl -sSL https://github.com/trotro/ansible-role-docker/blob/master/tasks/os_family/Debian.yml > /etc/ansible/roles/abaez.docker/tasks/os_family/Debian.yml
+
 CMD ["sh"]
