@@ -19,10 +19,6 @@
       - 22
       - 80
 
-- name: create virtual machine
-  hosts: wordpress
-  connection: local
-  tasks:
   - name: create and run VM(s)
     cs_instance:
       name: "{{ inventory_hostname_short }}"
@@ -39,5 +35,6 @@
 
   - name: assing IP to the inventory
     set_fact: ansible_ssh_host={{ vm.default_ip }}
+    
   - name: waiting for SSH to come up
     wait_for: port=22 host={{ vm.default_ip }} delay=5
