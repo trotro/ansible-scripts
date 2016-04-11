@@ -1,13 +1,18 @@
 localhost
 
-[ikcloud:children]
-wordpress
+[ikcloud]
 vm[01:05]
+
+[ikcloud:vars]
+cs_template=Debian 8 - Minimal - 64bits
+cs_offering=t1.pico
+cs_zone=EU-FR-IKDC1-Z3-BASIC
+cs_securitygroups=default
 
 [wordpress]
 wp-vm1
 
-[ikcloud:vars]
+[wordpress:vars]
 cs_template=Debian 8 - Minimal - 64bits
 cs_offering=t1.pico
 cs_zone=EU-NL-Z2-BASIC
