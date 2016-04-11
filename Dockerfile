@@ -16,6 +16,5 @@ RUN pip install cs
 #RUN ansible-playbook-wrapper
 # Install roles from galaxy
 RUN ansible-galaxy install abaez.docker
-RUN curl -sSL https://github.com/trotro/ansible-role-docker/blob/master/tasks/os_family/Debian.yml > /etc/ansible/roles/abaez.docker/tasks/os_family/Debian.yml
 
 CMD ["sh"]
