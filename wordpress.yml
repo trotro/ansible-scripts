@@ -1,10 +1,5 @@
 ---
 - hosts: wordpress
-
-  #install abaez.docker from ansible galaxy
-  pre_tasks:
-    - local_action: command ansible-galaxy install abaez.docker
-
   roles:
     - { role: cs-deploy.yml }
     - { role: docker-wordpress }
