@@ -1,19 +1,14 @@
-FROM williamyeh/ansible:alpine3-onbuild
+FROM williamyeh/ansible:alpine3
 
-# ==> Install cs library to deploy on cloudstack
+# Install cs library to deploy on cloudstack
 RUN pip install cs
 # /!\ require cloudstack.ini /!\
-# ==> Specify requirements filename;  default = "requirements.yml"
-#ENV REQUIREMENTS  requirements.yml
 
-# ==> Specify playbook filename;      default = "playbook.yml"
-#ENV PLAYBOOK      playbook.yml
-
-# ==> Specify inventory filename;     default = "/etc/ansible/hosts"
-#ENV INVENTORY     inventory.ini
-
-# ==> Executing Ansible (with a simple wrapper)...
-#RUN ansible-playbook-wrapper
+WORKDIR /tmp
+COPY . /tmp
+RUN chmod -R -X /tmp/*
+RUN echo "===> Diagnosis: host information..." && \
+            ansible -c local -m setup all
 # Install roles from galaxy
 RUN ansible-galaxy install abaez.docker
 
