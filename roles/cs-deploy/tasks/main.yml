@@ -1,0 +1,20 @@
+---
+- name: create and run VM(s)
+  cs_instance:
+    name: "{{ inventory_hostname_short }}"
+    template: "{{ cs_template }}"
+    zone: "{{ cs_zone }}"
+    service_offering: "{{ cs_offering }}"
+    security_groups: "{{ cs_securitygroups }}"
+    ssh_key: thatKey
+    state: started
+  register: vm
+
+- name: print VM infos
+  debug: msg="VM {{ vm.name }} {{ vm.default_ip }}"
+
+- name: assing IP to the inventory
+  set_fact: ansible_ssh_host={{ vm.default_ip }}
+
+- name: waiting for SSH to come up
+  wait_for: port=22 host={{ vm.default_ip }} delay=5
