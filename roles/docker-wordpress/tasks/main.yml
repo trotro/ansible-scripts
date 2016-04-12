@@ -31,6 +31,8 @@
       - /home/wp/data:/var/www/html
     links:
       - "mariadb:mysql"
+    ports:
+      - 80:80
 
 #- name: nginx container
 #  docker:

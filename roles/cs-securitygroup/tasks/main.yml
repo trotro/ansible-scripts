@@ -1,18 +1,15 @@
 ---
-- hosts: all
-  connection: local
-  tasks:
-  - name: ensure security group exists
-    cs_securitygroup:
-      name: "{{ item }}"
-    with_items:
-      - default
+- name: ensure security group exists
+  cs_securitygroup:
+    name: "{{ item }}"
+  with_items:
+    - default
 
-  - name: add inbound TCP rule
-    cs_securitygroup_rule:
-      security_group: default
-      start_port: "{{ item }}"
-      end_port: "{{ item }}"
-    with_items:
-      - 22
-      - 80
+- name: add inbound TCP rule
+  cs_securitygroup_rule:
+    security_group: default
+    start_port: "{{ item }}"
+    end_port: "{{ item }}"
+  with_items:
+    - 22
+    - 80
