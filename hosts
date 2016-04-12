@@ -1,7 +1,7 @@
 localhost
 
 [ikcloud]
-ceevm[01:05]
+ceevm[01:02]
 
 [ikcloud:vars]
 cs_template=Debian 8 - Minimal - 64bits
