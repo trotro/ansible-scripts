@@ -7,8 +7,6 @@ RUN pip install cs
 WORKDIR /tmp
 COPY . /tmp
 RUN chmod -R -X /tmp/*
-RUN echo "===> Diagnosis: host information..." && \
-            ansible -c local -m setup all
 # Install roles from galaxy
 RUN ansible-galaxy install abaez.docker
 
