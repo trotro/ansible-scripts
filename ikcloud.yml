@@ -1,4 +1,5 @@
 ---
 - hosts: ikcloud
+  connection: local
   roles:
     - { role: cs-deploy }
