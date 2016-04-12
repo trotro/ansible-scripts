@@ -1,0 +1,12 @@
+---
+- name: copy compose file
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - { src: 'wordpress.yml.j2', dest: '/root/wordpress.yml' }
+    - { src: 'gitlab.yml.j2', dest: '/root/gitlab.yml' }
+
+- name: launch containers
+  command: docker-compose -f {{ item }} up
+  with_items:
+    - /root/wordpress.yml
+    - /root/gitlab.yml
