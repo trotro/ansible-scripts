@@ -1,4 +1,4 @@
 ---
 - hosts: ikcloud
   roles:
-    - { role: cs-deploy.yml }
+    - { role: cs-deploy }
