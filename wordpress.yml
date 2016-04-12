@@ -1,5 +1,4 @@
 ---
 - hosts: wordpress
   roles:
-    - { role: cs-deploy.yml }
     - { role: docker-wordpress }
